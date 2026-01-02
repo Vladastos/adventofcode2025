@@ -1,6 +1,6 @@
 package it.vladastos.exceptions;
 
-public class UnimplementedException extends Exception{
+public class UnimplementedException extends RuntimeException{
     public UnimplementedException(String message) {
         super(message);
     }

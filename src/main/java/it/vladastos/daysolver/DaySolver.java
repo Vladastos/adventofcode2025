@@ -3,6 +3,7 @@ package it.vladastos.daysolver;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import it.vladastos.ParsedArgs;
 import it.vladastos.exceptions.InputFileException;
 import it.vladastos.exceptions.SolverNotFoundException;
 import it.vladastos.exceptions.UnimplementedException;
@@ -14,10 +15,17 @@ import it.vladastos.exceptions.UnimplementedException;
 public abstract class DaySolver {
 
     private String input;
+    private ParsedArgs args;
+    private void setArgs(ParsedArgs args) {
+        this.args = args;
+    }
 
-    public static DaySolver forDay(int day) throws Exception {
+    private static final String CLASS_NAME = "it.vladastos.solutions.day%d.Solver";
+    private static final String INPUT_FILE_NAME = "day%d_input.txt";
+
+    public static DaySolver fromParsedArgs(ParsedArgs args) throws SolverNotFoundException, InputFileException  {
         // Use reflection to get the class name
-        String className = "it.vladastos.solutions.day" + day + ".Solver";
+        String className = String.format(CLASS_NAME, args.day());
     
         // Load the class
         Class<?> clazz;
@@ -31,22 +39,21 @@ public abstract class DaySolver {
         DaySolver daySolver;
         try {
             daySolver = (DaySolver) clazz.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             throw new SolverNotFoundException("Error instantiating class: " + className, e);
         }
 
         // Initialize the input
         
-        daySolver.initInput(day);
+        daySolver.setArgs(args);
+        daySolver.initInput();
 
         return daySolver;
 
     }
 
-    public String solve(int part) throws IllegalArgumentException, UnimplementedException {
-        if (part < 1 || part > 2) {
-            throw new IllegalArgumentException("Invalid part. Expected 1 or 2, got " + part);
-        }
+    public String solve() {
+        int part = this.args.part();
         if (part == 1) {
             return solvePart1();
         } else{
@@ -55,9 +62,14 @@ public abstract class DaySolver {
     }
 
 
-    private void initInput(int day) throws InputFileException  {
+    private void initInput() throws InputFileException  {
+        if (this.args == null) {
+            throw new IllegalStateException("Args not set");
+        }
 
-        String fileName = "day" + day + "_input.txt";
+        int day = this.args.day();
+        
+        String fileName = String.format(INPUT_FILE_NAME, day);
         
         // Load the file from the resources
         InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
@@ -66,8 +78,6 @@ public abstract class DaySolver {
         }
         try (Scanner scanner = new Scanner(inputStream)) {
             this.input = scanner.useDelimiter("\\A").next();
-            
-        scanner.close();
         } catch (Exception e) {
             throw new InputFileException("Error reading input file: " + fileName, e);
         }
@@ -78,12 +88,12 @@ public abstract class DaySolver {
         return this.input;
     }
 
-    public String solvePart1() throws UnimplementedException{
+    public String solvePart1() {
         throw new UnimplementedException("Not implemented");
-    };
+    }
     
-    public String solvePart2() throws UnimplementedException{
+    public String solvePart2() {
         throw new UnimplementedException("Not implemented");
-    };
+    }
 
 }
