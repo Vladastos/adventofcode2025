@@ -1,6 +1,11 @@
 package it.vladastos.daysolver;
 
+import java.io.InputStream;
 import java.util.Scanner;
+
+import it.vladastos.exceptions.InputFileException;
+import it.vladastos.exceptions.SolverNotFoundException;
+import it.vladastos.exceptions.UnimplementedException;
 
 /**
  * Abstract base class for all solvers
@@ -19,65 +24,66 @@ public abstract class DaySolver {
         try {
             clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new Exception("Could not find solution class: " + className, e);
+            throw new SolverNotFoundException("Could not find solution class: " + className, e);
         }
     
         // Instantiate the class
         DaySolver daySolver;
         try {
             daySolver = (DaySolver) clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new Exception("Error instantiating class: " + className, e);
+        } catch (Exception e) {
+            throw new SolverNotFoundException("Error instantiating class: " + className, e);
         }
 
         // Initialize the input
-        try {
-            daySolver.initInput(day);  
-        } catch (Exception e) {
-            throw new Exception("Error initializing input for day:" + day+ " " + e.getMessage(), e);
-        }
+        
+        daySolver.initInput(day);
 
         return daySolver;
 
     }
 
-    public String solve(int part) throws Exception {
+    public String solve(int part) throws IllegalArgumentException, UnimplementedException {
+        if (part < 1 || part > 2) {
+            throw new IllegalArgumentException("Invalid part. Expected 1 or 2, got " + part);
+        }
         if (part == 1) {
             return solvePart1();
-        } else if (part == 2) {
+        } else{
             return solvePart2();
-        } else {
-            throw new Exception("Invalid part: " + part);
         }
     }
 
 
-    private void initInput(int day) {
-        
+    private void initInput(int day) throws InputFileException  {
+
         String fileName = "day" + day + "_input.txt";
         
         // Load the file from the resources
-        java.io.InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
+        InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
         if (inputStream == null) {
-            throw new RuntimeException("Could not find input file for day " + day);
+            throw new InputFileException("Input file not found: " + fileName);
         }
-
-        Scanner scanner = new Scanner(inputStream);
-        this.input = scanner.useDelimiter("\\A").next();
+        try (Scanner scanner = new Scanner(inputStream)) {
+            this.input = scanner.useDelimiter("\\A").next();
+            
         scanner.close();
-
+        } catch (Exception e) {
+            throw new InputFileException("Error reading input file: " + fileName, e);
+        }
     }
+
 
     public String getInput() {
         return this.input;
     }
 
-    public String solvePart1() {
-        throw new RuntimeException("Not implemented");
+    public String solvePart1() throws UnimplementedException{
+        throw new UnimplementedException("Not implemented");
     };
     
-    public String solvePart2() {
-        throw new RuntimeException("Not implemented");
+    public String solvePart2() throws UnimplementedException{
+        throw new UnimplementedException("Not implemented");
     };
 
 }

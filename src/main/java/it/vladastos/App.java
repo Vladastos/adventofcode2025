@@ -2,10 +2,18 @@ package it.vladastos;
 import it.vladastos.daysolver.DaySolver;
 
 public class App {
+    static String DAY_PREFIX = "day";
+    static String PART_PREFIX = "part";
+
+    /**
+     * Record to hold the parsed arguments
+     * Values are validated in the parseArgs method, so they are guaranteed to be valid
+     */
     public record ParsedArgs(int day, int part) {}
 
     public static void main(String[] args) {
 
+       
         // Parse the arguments
         ParsedArgs parsedArgs;
         try {
@@ -61,12 +69,12 @@ public class App {
         String day = args[0];
         String part = args[1];
 
-        if (day.startsWith("day")) {
-            day = day.substring(3);
+        if (day.startsWith(DAY_PREFIX)) {
+            day = day.substring(DAY_PREFIX.length());
         }
 
-        if (part.startsWith("part")) {
-            part = part.substring(4);
+        if (part.startsWith(PART_PREFIX)) {
+            part = part.substring(PART_PREFIX.length());
         }
 
         int dayInt;
