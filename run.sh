@@ -5,7 +5,6 @@
 
 function recompile {
     echo "Recompiling..."
-    mvn clean --quiet
     mvn compile --quiet
 }
 

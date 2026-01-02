@@ -19,9 +19,12 @@ mvn test
 mvn test -Dtest=AppTest
 
 # Run the application (solve a specific day and part)
-mvn exec:java --sun-misc-unsafe-memory-access=allow -Dexec.args="<day> <part>"
+mvn exec:java -Dexec.args="<day> <part>"
 # Example: mvn exec:java -Dexec.args="1 1"
 # Arguments can also use "day" and "part" prefixes: "day1 part1"
+
+# Quick run using the shell script
+./run.sh <day> <part>
 
 # Clean build artifacts
 mvn clean
@@ -39,23 +42,27 @@ The project uses an abstract `DaySolver` base class with reflection-based instan
 - **DaySolver.forDay(int day)**: Uses reflection to dynamically load the solver class for a given day
   - Constructs class name as `it.vladastos.solutions.day{N}.Solver`
   - Example: day 1 → `it.vladastos.solutions.day1.Solver`
+  - Automatically loads input from resources as `day{N}_input.txt`
 
 - **Abstract methods**: Each day's solver must extend `DaySolver` and override:
-  - `solvePart1(String input)`: Returns the solution for part 1
-  - `solvePart2(String input)`: Returns the solution for part 2
+  - `solvePart1()`: Returns the solution for part 1 (throws RuntimeException if not implemented)
+  - `solvePart2()`: Returns the solution for part 2 (throws RuntimeException if not implemented)
+  - Access input via `getInput()` method inherited from `DaySolver`
 
 ### Package Structure
 
 ```
-it.vladastos/
-├── App.java                           # Main entry point, argument parsing
-├── daysolver/
-│   └── DaySolver.java                 # Abstract base class for all solvers
-├── solutions/
-│   └── day{N}/
-│       └── Solver.java                # Concrete solver for day N
+src/main
+├── java
+│   └── it.vladastos/
+│       ├── App.java                           # Main entry point, argument parsing
+│       ├── daysolver/
+│       │   └── DaySolver.java                 # Abstract base class for all solvers
+│       ├── solutions/
+│       │   └── day{N}/
+│       │       └── Solver.java                # Concrete solver for day N
 └── resources/
-    └── day{N}/                        # Input files for day N (if needed)
+    └── day{N}_input.txt               # Input file for day N
 ```
 
 ### Creating a New Day's Solution
@@ -63,11 +70,21 @@ it.vladastos/
 1. Create package: `src/main/java/it/vladastos/solutions/day{N}/`
 2. Create `Solver.java` extending `DaySolver`
 3. Override `solvePart1()` and/or `solvePart2()`
-4. The solver will be automatically discoverable via reflection
+4. Place input file at `src/main/resources/day{N}_input.txt`
+5. The solver will be automatically discoverable via reflection
 
 ### Input Handling
 
-Currently, the `DaySolver.solve()` method has placeholder input handling (empty string). Input loading mechanism is marked with TODO comments and needs to be implemented per the project's needs.
+- Input files are automatically loaded from `src/main/resources/day{N}_input.txt`
+- The `DaySolver` base class handles input loading via reflection in `initInput()`
+- Access the input in solver implementations using `getInput()`
+- Input is read as a single string (Scanner with delimiter `\\A`)
+
+### Argument Parsing
+
+The `App.main()` method accepts arguments with flexible formatting:
+- Numeric only: `1 1` (day 1, part 1)
+- Prefixed: `day1 part1` (automatically strips "day" and "part" prefixes)
 
 ## Testing
 

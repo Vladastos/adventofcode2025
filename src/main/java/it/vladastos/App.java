@@ -5,6 +5,8 @@ public class App {
     public record ParsedArgs(int day, int part) {}
 
     public static void main(String[] args) {
+
+        // Parse the arguments
         ParsedArgs parsedArgs;
         try {
             parsedArgs = parseArgs(args);
@@ -14,6 +16,7 @@ public class App {
             return;
         }
 
+        // Create the solver using the factory method
         DaySolver daySolver;
         try {
             daySolver = DaySolver.forDay(parsedArgs.day);
@@ -21,6 +24,8 @@ public class App {
             System.err.println(e.getMessage());
             return;
         }
+
+        // Solve the puzzle and print the solution
         String solution;
         try {
             solution = daySolver.solve(parsedArgs.part);
