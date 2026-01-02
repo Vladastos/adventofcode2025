@@ -1,15 +1,15 @@
-package it.vladastos.daysolver;
+package it.vladastos;
 
 import java.io.InputStream;
 import java.util.Scanner;
 
-import it.vladastos.ParsedArgs;
 import it.vladastos.exceptions.InputFileException;
 import it.vladastos.exceptions.SolverNotFoundException;
 import it.vladastos.exceptions.UnimplementedException;
 
 /**
  * Abstract base class for all solvers
+ * Uses the same input for both parts
  * 
  */
 public abstract class DaySolver {
@@ -44,7 +44,6 @@ public abstract class DaySolver {
         }
 
         // Initialize the input
-        
         daySolver.setArgs(args);
         daySolver.initInput();
 
@@ -87,6 +86,8 @@ public abstract class DaySolver {
     public String getInput() {
         return this.input;
     }
+
+    
 
     public String solvePart1() {
         throw new UnimplementedException("Not implemented");

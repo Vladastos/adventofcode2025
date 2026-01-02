@@ -1,6 +1,6 @@
 package it.vladastos.solutions.day1;
 
-import it.vladastos.daysolver.DaySolver;
+import it.vladastos.DaySolver;
 
 public class Solver extends DaySolver {
 

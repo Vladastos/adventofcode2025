@@ -39,14 +39,21 @@ mvn package
 
 The project uses an abstract `DaySolver` base class with reflection-based instantiation:
 
-- **DaySolver.forDay(int day)**: Uses reflection to dynamically load the solver class for a given day
-  - Constructs class name as `it.vladastos.solutions.day{N}.Solver`
+- **DaySolver.fromParsedArgs(ParsedArgs args)**: Factory method that uses reflection to dynamically load the solver class for a given day
+  - Constructs class name as `it.vladastos.solutions.day{N}.Solver` (where {N} is the day number)
   - Example: day 1 → `it.vladastos.solutions.day1.Solver`
   - Automatically loads input from resources as `day{N}_input.txt`
+  - Returns an initialized DaySolver instance ready to solve
+  - Throws `SolverNotFoundException` if the solver class cannot be found or instantiated
+  - Throws `InputFileException` if the input file cannot be loaded
+
+- **solve()**: Main solving method that dispatches to the appropriate part solver
+  - Calls `solvePart1()` or `solvePart2()` based on the part specified in ParsedArgs
+  - Returns a String containing the solution
 
 - **Abstract methods**: Each day's solver must extend `DaySolver` and override:
-  - `solvePart1()`: Returns the solution for part 1 (throws RuntimeException if not implemented)
-  - `solvePart2()`: Returns the solution for part 2 (throws RuntimeException if not implemented)
+  - `solvePart1()`: Returns the solution for part 1 as a String (throws `UnimplementedException` if not overridden)
+  - `solvePart2()`: Returns the solution for part 2 as a String (throws `UnimplementedException` if not overridden)
   - Access input via `getInput()` method inherited from `DaySolver`
 
 ### Package Structure
@@ -56,8 +63,8 @@ src/main
 ├── java
 │   └── it.vladastos/
 │       ├── App.java                           # Main entry point, argument parsing
-│       ├── daysolver/
-│       │   └── DaySolver.java                 # Abstract base class for all solvers
+│       ├── DaySolver.java                     # Abstract base class for all solvers
+│       ├── ParsedArgs.java                    # Argument parsing class
 │       ├── solutions/
 │       │   └── day{N}/
 │       │       └── Solver.java                # Concrete solver for day N
@@ -82,12 +89,5 @@ src/main
 
 ### Argument Parsing
 
-The `App.main()` method accepts arguments with flexible formatting:
-- Numeric only: `1 1` (day 1, part 1)
-- Prefixed: `day1 part1` (automatically strips "day" and "part" prefixes)
-
-## Testing
-
-The project uses JUnit 5 (Jupiter) for testing:
-- Test classes should be in `src/test/java/it/vladastos/`
-- JUnit 5 API and parameterized tests are available via `junit-bom`
+- Argument parsing is handled by `ParsedArgs` class
+- The `App` class uses `ParsedArgs` to parse command-line arguments
