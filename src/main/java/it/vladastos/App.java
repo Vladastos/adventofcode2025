@@ -1,5 +1,4 @@
 package it.vladastos;
-import it.vladastos.daysolver.DaySolver;
 import it.vladastos.exceptions.InputFileException;
 import it.vladastos.exceptions.SolverNotFoundException;
 

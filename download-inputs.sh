@@ -31,7 +31,12 @@ function check_dependencies {
     if ! command -v wget >/dev/null 2>&1; then
         echo "wget is not installed. Please install wget."
         exit 1
-    fi    
+    fi
+
+    if ! command -v mvn >/dev/null 2>&1; then
+        echo "mvn is not installed. Please install Maven."
+        exit 1
+    fi
 }
 
 function download_input {

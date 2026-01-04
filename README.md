@@ -1,5 +1,12 @@
 # Advent of Code 2025
 
+## Requirements
+
+- Java
+- Maven
+- wget
+- .aoc_cookie
+
 ## Usage
 
 ### Download inputs
