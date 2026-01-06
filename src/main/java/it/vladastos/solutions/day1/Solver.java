@@ -50,15 +50,12 @@ public class Solver extends DaySolver {
                 zeroCount += 1;
             }
 
-            // Check if the starting dial position is 0 and the a zero was found during the transition.
-            // Without this check, the times the dial reaches zero when starting at 0 would be counted twice.
+            // Check if the starting dial position is 0 and the element is negative. That would mean that the dial was turned to the left starting from zero.
             if (oldDialPosition == 0 && element < 0) {
                 zeroCount -= 1;
             }
 
             result += zeroCount;
-            //String op = element < 0 ? "-" : "+";
-            // System.out.println("Element: " + element +" Transition: (" + oldDialPosition + " "+ op + " " + Math.abs(element) + " -> " + dialPosition + ") " +" zeroCount: " + zeroCount + ", result: " + result);
         }
 
         return String.valueOf(result);
