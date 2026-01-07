@@ -3,6 +3,7 @@ package it.vladastos;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import it.vladastos.ArgParser.ParsedArgs;
 import it.vladastos.exceptions.InputFileException;
 import it.vladastos.exceptions.SolverNotFoundException;
 import it.vladastos.exceptions.UnimplementedException;
