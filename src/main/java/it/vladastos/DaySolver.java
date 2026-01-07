@@ -1,6 +1,7 @@
 package it.vladastos;
 
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Scanner;
 
 import it.vladastos.ArgParser.ParsedArgs;
@@ -23,6 +24,7 @@ public abstract class DaySolver {
 
     private static final String CLASS_NAME = "it.vladastos.solutions.day%d.Solver";
     private static final String INPUT_FILE_NAME = "day%d_input.txt";
+    private static final String TEST_INPUT_FILE_NAME= "day%d_test_input.txt";
 
     public static DaySolver fromParsedArgs(ParsedArgs args) throws SolverNotFoundException, InputFileException  {
         // Use reflection to get the class name
@@ -45,8 +47,7 @@ public abstract class DaySolver {
         }
 
         // Initialize the input
-        daySolver.setArgs(args);
-        daySolver.initInput();
+        daySolver.init(args);
 
         return daySolver;
 
@@ -62,14 +63,13 @@ public abstract class DaySolver {
     }
 
 
-    private void initInput() throws InputFileException  {
-        if (this.args == null) {
-            throw new IllegalStateException("Args not set");
-        }
+    private void init(ParsedArgs args) throws InputFileException  {
+        Objects.requireNonNull(args, "args must not be null");
+        this.setArgs(args);
 
         int day = this.args.day();
-        
-        String fileName = String.format(INPUT_FILE_NAME, day);
+
+        String fileName = this.args.test() ? String.format(TEST_INPUT_FILE_NAME, day) : String.format(INPUT_FILE_NAME, day);
         
         // Load the file from the resources
         InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);

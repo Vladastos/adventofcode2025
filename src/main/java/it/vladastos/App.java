@@ -15,14 +15,15 @@ public class App {
             printUsage();
             return;
         }
-        System.out.println(parsedArgs);
+        
         // Create the solver using the factory method
         DaySolver daySolver = DaySolver.fromParsedArgs(parsedArgs);
 
         // Solve the puzzle and print the solution
         String solution = daySolver.solve();
-        
+    
         System.out.println(solution);
+    
     }
 
 
