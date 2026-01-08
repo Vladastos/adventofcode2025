@@ -58,7 +58,6 @@ public class ArgParser {
         // Parse flags
         
         boolean test = false;
-        boolean benchmark = false;
         boolean debug = false;
         List<String> argsWithoutFlags = new ArrayList<>();
 
@@ -69,8 +68,6 @@ public class ArgParser {
                     debug = true;
                 } else if (arg.equals("-t") || arg.equals("--test")) {
                     test = true;
-                } else if (arg.equals("-b") || arg.equals("--benchmark")) {
-                    benchmark = true;
                 } else {
                     throw new IllegalArgumentException("Invalid flag: " + arg);
                 }
@@ -87,12 +84,12 @@ public class ArgParser {
         }
 
         
-        return new ParsedArgs(dayInt, partInt, debug, test, benchmark);
+        return new ParsedArgs(dayInt, partInt, debug, test);
     }
 
-    public record ParsedArgs(int day, int part, boolean debug, boolean test, boolean benchmark) {
+    public record ParsedArgs(int day, int part, boolean debug, boolean test) {
         public ParsedArgs(int day, int part) {
-            this(day, part, false, false, false);
+            this(day, part, false, false);
         }
     }
 

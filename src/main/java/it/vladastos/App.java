@@ -45,6 +45,6 @@ public class App {
 
 
     private static void printUsage() {
-        System.err.println("Usage: java App <day> <part> [-d|--debug] [-t|--test] [-b|--benchmark]");
+        System.err.println("Usage: java App <day> <part> [-d|--debug] [-t|--test]");
     }
 }
