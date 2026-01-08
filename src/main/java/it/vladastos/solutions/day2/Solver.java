@@ -3,9 +3,9 @@ package it.vladastos.solutions.day2;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.vladastos.DaySolver;
+import it.vladastos.AbstractSolver;
 
-public class Solver extends DaySolver {
+public class Solver extends AbstractSolver {
 
     public String solvePart1() {
         
@@ -109,7 +109,6 @@ public class Solver extends DaySolver {
             // If the string length is divisible by i + 1, check if the string is obtainable by concatenating strings of length i + 1
             if (str.length() % (i + 1) == 0) {
                 int times = str.length() / (i + 1);
-                logger.fine("String "+ str + " could be obtainable by concatenating " + times + " strings of length " + (i + 1));
                 if (checkIfObtainable(str, i + 1, times)) {
                     isObtainable = true;
                     break;
@@ -139,14 +138,12 @@ public class Solver extends DaySolver {
             String first = str.substring(startOfFirstSubstring, endOfFirstSubstring);
             String second = str.substring(startOfSecondSubstring, endOfSecondSubstring );
 
-            logger.fine("Checking if string " + first + " == " + second);
-
             if (!first.equals(second)) {
-                logger.fine("Found different substrings: " + first + " != " + second);
                 return false;
             }
 
         }
+        
         logger.fine("String " + str + " is obtainable by concatenating " + times + " times the string " + str.substring(0, length));
         return true;
     }

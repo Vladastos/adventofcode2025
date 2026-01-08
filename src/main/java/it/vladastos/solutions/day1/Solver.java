@@ -1,9 +1,9 @@
 package it.vladastos.solutions.day1;
 
 import java.util.List;
-import it.vladastos.DaySolver;
+import it.vladastos.AbstractSolver;
 
-public class Solver extends DaySolver {
+public class Solver extends AbstractSolver {
     public String solvePart1() {
 
         List<Integer> parsedInput = parseInput(this.getInput());

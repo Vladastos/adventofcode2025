@@ -6,7 +6,6 @@ import java.util.List;
 /**
  *  Utility class for parsing command line arguments
  *  
- *  returns a ParsedArgs object
  */
 public class ArgParser {
 

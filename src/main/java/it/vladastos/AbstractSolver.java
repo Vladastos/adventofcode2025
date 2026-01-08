@@ -15,7 +15,7 @@ import it.vladastos.exceptions.UnimplementedException;
  * Uses the same input for both parts
  * 
  */
-public abstract class DaySolver {
+public abstract class AbstractSolver {
 
     public Logger logger;
 
@@ -35,7 +35,7 @@ public abstract class DaySolver {
      * Factory method. The only way to get a valid solver
      * All the initialization is done here 
      **/ 
-    public static DaySolver fromParsedArgs(ParsedArgs args) throws SolverNotFoundException, InputFileException  {
+    public static AbstractSolver fromParsedArgs(ParsedArgs args) throws SolverNotFoundException, InputFileException  {
         // Use reflection to get the class name
         String className = String.format(CLASS_NAME, args.day());
     
@@ -48,10 +48,10 @@ public abstract class DaySolver {
         }
     
         // Instantiate the class
-        DaySolver daySolver;
+        AbstractSolver daySolver;
         
         try {
-            daySolver = (DaySolver) clazz.getDeclaredConstructor().newInstance();
+            daySolver = (AbstractSolver) clazz.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             throw new SolverNotFoundException("Error instantiating class: " + className, e);
         }
@@ -69,7 +69,7 @@ public abstract class DaySolver {
         String fileName = args.test() ? String.format(TEST_INPUT_FILE_NAME, day) : String.format(INPUT_FILE_NAME, day);
         
         // Load the file from the resources
-        InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
+        InputStream inputStream = AbstractSolver.class.getResourceAsStream("/" + fileName);
         if (inputStream == null) {
             throw new InputFileException("Input file not found: " + fileName);
         }
@@ -106,7 +106,7 @@ public abstract class DaySolver {
             if (checkTestResult(result)) {
                 logger.info("✅ Test passed for day " + this.args.day() + " and part " + this.args.part());
             } else {
-                logger.info("❌ Test failed for day " + this.args.day() + " and part " + this.args.part());
+                logger.info("❌ Test failed for day " + this.args.day() + " and part " + this.args.part() + ". Expected: " + result);
             }
         } catch (InputFileException e) {
             logger.info("Could not check test result for day " + this.args.day() + " and part " + this.args.part() + ": " + e.getMessage());
@@ -117,7 +117,7 @@ public abstract class DaySolver {
         int day = this.args.day();
         int part = this.args.part();
         String fileName = String.format(TEST_RESULT_FILE_NAME, day, part);
-        InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
+        InputStream inputStream = AbstractSolver.class.getResourceAsStream("/" + fileName);
         if (inputStream == null) {
             throw new InputFileException("Test result file not found: " + fileName);
         }

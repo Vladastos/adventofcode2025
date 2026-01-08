@@ -1,6 +1,7 @@
 package it.vladastos;
 import java.io.InputStream;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import it.vladastos.ArgParser.ParsedArgs;
 import it.vladastos.exceptions.InputFileException;
@@ -22,6 +23,7 @@ public class App {
         }
         
         // Initalize the logger
+        Logger logger = Logger.getLogger(App.class.getName());
         try {
             
             InputStream inputStream = App.class.getResourceAsStream("/logging.properties");
@@ -32,12 +34,12 @@ public class App {
         }
         
         // Create the solver using the factory method
-        DaySolver daySolver = DaySolver.fromParsedArgs(parsedArgs);
+        AbstractSolver daySolver = AbstractSolver.fromParsedArgs(parsedArgs);
 
         // Solve the puzzle and print the solution
         String solution = daySolver.solve();
     
-        System.out.println(solution);
+        logger.info("Solution: " + solution);
     
     }
 
