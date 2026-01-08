@@ -67,7 +67,7 @@ public class Solver extends DaySolver {
         // Split the input into lines (windows)
         List<String> lines = List.of(input.split("\n"));
         
-        System.out.println("Lines: " + lines.size());
+        logger.fine("Parsing input. Number of lines: " + lines.size());
         // Parse the input
         List<Integer> result = lines.stream().map((line) -> {
             if (line.isEmpty()) {

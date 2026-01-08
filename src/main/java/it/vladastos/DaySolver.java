@@ -2,6 +2,8 @@ package it.vladastos;
 
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.vladastos.ArgParser.ParsedArgs;
 import it.vladastos.exceptions.InputFileException;
@@ -14,6 +16,8 @@ import it.vladastos.exceptions.UnimplementedException;
  * 
  */
 public abstract class DaySolver {
+
+    public Logger logger;
 
     private String input;
     private ParsedArgs args;
@@ -45,6 +49,7 @@ public abstract class DaySolver {
     
         // Instantiate the class
         DaySolver daySolver;
+        
         try {
             daySolver = (DaySolver) clazz.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
@@ -53,6 +58,10 @@ public abstract class DaySolver {
 
         // Set the arguments
         daySolver.setArgs(args);
+
+        // Set the logger
+        daySolver.logger = Logger.getLogger(daySolver.getClass().getName());
+        daySolver.logger.setLevel(args.debug() ? Level.FINE : Level.INFO);
 
         // Initialize the input
         int day = args.day();
@@ -77,6 +86,8 @@ public abstract class DaySolver {
     // Main method of the solver. Calls solvePart1() or solvePart2() depending on the part
     public String solve() {
         int part = this.args.part();
+        
+        logger.fine("Solving day " + this.args.day() + " and part " + part);
         String result;
         if (part == 1) {
             result = solvePart1();
@@ -90,15 +101,15 @@ public abstract class DaySolver {
     }
 
     public void performTest(String result) {
-        
+
         try {
             if (checkTestResult(result)) {
-                System.out.println("Test passed for day " + this.args.day() + " and part " + this.args.part());
+                logger.info("✅ Test passed for day " + this.args.day() + " and part " + this.args.part());
             } else {
-                System.out.println("Test failed for day " + this.args.day() + " and part " + this.args.part());
+                logger.info("❌ Test failed for day " + this.args.day() + " and part " + this.args.part());
             }
         } catch (InputFileException e) {
-            System.out.println("Could not check test result for day " + this.args.day() + " and part " + this.args.part() + ": " + e.getMessage());
+            logger.info("Could not check test result for day " + this.args.day() + " and part " + this.args.part() + ": " + e.getMessage());
         }
     }
 

@@ -80,7 +80,7 @@ public class Solver extends DaySolver {
         }
         // If the above loop doesn't return false, the string is obtainable by concatenating two identical strings so it is invalid
 
-        System.out.println("Found invalid id: " + id + ". " + str.substring(0, str.length() / 2) + " == " + str.substring(str.length() / 2));
+        logger.fine("Found invalid id: " + id + ". " + str.substring(0, str.length() / 2) + " == " + str.substring(str.length() / 2));
         return true;
     }
 
@@ -109,7 +109,7 @@ public class Solver extends DaySolver {
             // If the string length is divisible by i + 1, check if the string is obtainable by concatenating strings of length i + 1
             if (str.length() % (i + 1) == 0) {
                 int times = str.length() / (i + 1);
-                // System.out.println("String "+ str + " could be obtainable by concatenating " + times + " strings of length " + (i + 1));
+                logger.fine("String "+ str + " could be obtainable by concatenating " + times + " strings of length " + (i + 1));
                 if (checkIfObtainable(str, i + 1, times)) {
                     isObtainable = true;
                     break;
@@ -139,15 +139,15 @@ public class Solver extends DaySolver {
             String first = str.substring(startOfFirstSubstring, endOfFirstSubstring);
             String second = str.substring(startOfSecondSubstring, endOfSecondSubstring );
 
-            //System.out.println("Checking if string " + first + " == " + second);
+            logger.fine("Checking if string " + first + " == " + second);
 
             if (!first.equals(second)) {
-                //System.out.println("Found different substrings: " + first + " != " + second);
+                logger.fine("Found different substrings: " + first + " != " + second);
                 return false;
             }
 
         }
-        System.out.println("String " + str + " is obtainable by concatenating " + times + " times the string " + str.substring(0, length));
+        logger.fine("String " + str + " is obtainable by concatenating " + times + " times the string " + str.substring(0, length));
         return true;
     }
 }
