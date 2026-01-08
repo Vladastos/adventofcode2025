@@ -42,7 +42,8 @@ function check_dependencies {
 function download_input {
     day=$1
     echo "Downloading input for day $day..."
-    wget --quiet -O "src/main/resources/day${day}_input.txt" "https://adventofcode.com/2025/day/$day/input" --header "Cookie: session=$(cat .aoc_cookie)"
+    mkdir -p "src/main/resources/day${day}"
+    wget --quiet -O "src/main/resources/day${day}/input.txt" "https://adventofcode.com/2025/day/$day/input" --header "Cookie: session=$(cat .aoc_cookie)"
 }
 
 function download_all {

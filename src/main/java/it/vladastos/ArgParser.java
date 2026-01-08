@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Record to hold the parsed arguments
- * Values are validated in the parseArgs method, so they are guaranteed to be valid
+ *  Utility class for parsing command line arguments
+ *  
+ *  returns a ParsedArgs object
  */
 public class ArgParser {
 

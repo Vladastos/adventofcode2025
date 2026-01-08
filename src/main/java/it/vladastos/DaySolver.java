@@ -1,7 +1,6 @@
 package it.vladastos;
 
 import java.io.InputStream;
-import java.util.Objects;
 import java.util.Scanner;
 
 import it.vladastos.ArgParser.ParsedArgs;
@@ -23,9 +22,15 @@ public abstract class DaySolver {
     }
 
     private static final String CLASS_NAME = "it.vladastos.solutions.day%d.Solver";
-    private static final String INPUT_FILE_NAME = "day%d_input.txt";
-    private static final String TEST_INPUT_FILE_NAME= "day%d_test_input.txt";
-
+    private static final String INPUT_FILE_NAME = "day%d/input.txt";
+    private static final String TEST_INPUT_FILE_NAME= "day%d/test_input.txt";
+    private static final String TEST_RESULT_FILE_NAME = "day%d/test_result_part%d.txt";
+    
+    
+    /**  
+     * Factory method. The only way to get a valid solver
+     * All the initialization is done here 
+     **/ 
     public static DaySolver fromParsedArgs(ParsedArgs args) throws SolverNotFoundException, InputFileException  {
         // Use reflection to get the class name
         String className = String.format(CLASS_NAME, args.day());
@@ -46,30 +51,13 @@ public abstract class DaySolver {
             throw new SolverNotFoundException("Error instantiating class: " + className, e);
         }
 
+        // Set the arguments
+        daySolver.setArgs(args);
+
         // Initialize the input
-        daySolver.init(args);
+        int day = args.day();
 
-        return daySolver;
-
-    }
-
-    public String solve() {
-        int part = this.args.part();
-        if (part == 1) {
-            return solvePart1();
-        } else{
-            return solvePart2();
-        }
-    }
-
-
-    private void init(ParsedArgs args) throws InputFileException  {
-        Objects.requireNonNull(args, "args must not be null");
-        this.setArgs(args);
-
-        int day = this.args.day();
-
-        String fileName = this.args.test() ? String.format(TEST_INPUT_FILE_NAME, day) : String.format(INPUT_FILE_NAME, day);
+        String fileName = args.test() ? String.format(TEST_INPUT_FILE_NAME, day) : String.format(INPUT_FILE_NAME, day);
         
         // Load the file from the resources
         InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
@@ -77,19 +65,65 @@ public abstract class DaySolver {
             throw new InputFileException("Input file not found: " + fileName);
         }
         try (Scanner scanner = new Scanner(inputStream)) {
-            this.input = scanner.useDelimiter("\\A").next();
+            daySolver.input = scanner.useDelimiter("\\A").next();
         } catch (Exception e) {
             throw new InputFileException("Error reading input file: " + fileName, e);
         }
+
+        return daySolver;
+
     }
 
+    // Main method of the solver. Calls solvePart1() or solvePart2() depending on the part
+    public String solve() {
+        int part = this.args.part();
+        String result;
+        if (part == 1) {
+            result = solvePart1();
+        } else{
+            result = solvePart2();
+        }
+        if (this.args.test()) {
+            performTest(result);    
+        }
+        return result;
+    }
 
+    public void performTest(String result) {
+        
+        try {
+            if (checkTestResult(result)) {
+                System.out.println("Test passed for day " + this.args.day() + " and part " + this.args.part());
+            } else {
+                System.out.println("Test failed for day " + this.args.day() + " and part " + this.args.part());
+            }
+        } catch (InputFileException e) {
+            System.out.println("Could not check test result for day " + this.args.day() + " and part " + this.args.part() + ": " + e.getMessage());
+        }
+    }
+
+    private boolean checkTestResult(String result) throws InputFileException {
+        int day = this.args.day();
+        int part = this.args.part();
+        String fileName = String.format(TEST_RESULT_FILE_NAME, day, part);
+        InputStream inputStream = DaySolver.class.getResourceAsStream("/" + fileName);
+        if (inputStream == null) {
+            throw new InputFileException("Test result file not found: " + fileName);
+        }
+        try (Scanner scanner = new Scanner(inputStream)) {
+            String expected = scanner.useDelimiter("\\A").next();
+            return expected.equals(result);
+        } catch (Exception e) {
+            throw new InputFileException("Error reading test result file: " + fileName, e);
+        }
+
+    }
+    
     public String getInput() {
         return this.input;
     }
 
-    
-
+    // Must be implemented by subclasses
     public String solvePart1() {
         throw new UnimplementedException("Not implemented");
     }
@@ -97,5 +131,4 @@ public abstract class DaySolver {
     public String solvePart2() {
         throw new UnimplementedException("Not implemented");
     }
-
 }
