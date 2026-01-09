@@ -103,31 +103,28 @@ public abstract class AbstractSolver {
     public void performTest(String result) {
 
         try {
-            if (checkTestResult(result)) {
+            String expected = getExpectedResult(this.args.day(), this.args.part());
+            if (expected.equals(result)) {
                 logger.info("✅ Test passed for day " + this.args.day() + " and part " + this.args.part());
             } else {
-                logger.info("❌ Test failed for day " + this.args.day() + " and part " + this.args.part() + ". Expected: " + result);
+                logger.info("❌ Test failed for day " + this.args.day() + " and part " + this.args.part() + ". Expected: " + expected + ", got: " + result);
             }
         } catch (InputFileException e) {
             logger.info("Could not check test result for day " + this.args.day() + " and part " + this.args.part() + ": " + e.getMessage());
         }
     }
 
-    private boolean checkTestResult(String result) throws InputFileException {
-        int day = this.args.day();
-        int part = this.args.part();
+    String getExpectedResult(int day, int part) throws InputFileException {
         String fileName = String.format(TEST_RESULT_FILE_NAME, day, part);
         InputStream inputStream = AbstractSolver.class.getResourceAsStream("/" + fileName);
         if (inputStream == null) {
             throw new InputFileException("Test result file not found: " + fileName);
         }
         try (Scanner scanner = new Scanner(inputStream)) {
-            String expected = scanner.useDelimiter("\\A").next();
-            return expected.equals(result);
+            return scanner.useDelimiter("\\A").next();
         } catch (Exception e) {
             throw new InputFileException("Error reading test result file: " + fileName, e);
         }
-
     }
     
     public String getInput() {
