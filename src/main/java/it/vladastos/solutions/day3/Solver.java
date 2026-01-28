@@ -11,9 +11,9 @@ public class Solver extends AbstractSolver {
     public String solvePart1() {
         String input = getInput();
         List<List<Integer>> parsedInput = parseInput(input);
-        logger.info(parsedInput.toString());
+        logger.fine(parsedInput.toString());
         
-        parsedInput.forEach(line -> logger.info(getResultForLine(line).toString()));
+        parsedInput.forEach(line -> logger.fine(getResultForLine(line).toString()));
         return parsedInput.stream().map(this::getResultForLine).reduce(0, Integer::sum).toString();
     }
     private Integer getResultForLine(List<Integer> line) {

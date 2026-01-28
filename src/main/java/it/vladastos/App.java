@@ -37,14 +37,20 @@ public class App {
         AbstractSolver daySolver = AbstractSolver.fromParsedArgs(parsedArgs);
 
         // Solve the puzzle and print the solution
+        long start = System.currentTimeMillis();
         String solution = daySolver.solve();
-    
+        long end = System.currentTimeMillis();
+        if (parsedArgs.benchmark()) {
+            logger.info("Benchmark: " + (end - start) + "ms");
+            return;
+        }
+        
         logger.info("Solution: " + solution);
     
     }
 
 
     private static void printUsage() {
-        System.err.println("Usage: java App <day> <part> [-d|--debug] [-t|--test]");
+        System.err.println("Usage: java App <day> <part> [-d|--debug] [-t|--test] [-b|--benchmark]");
     }
 }
