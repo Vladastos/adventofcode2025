@@ -48,8 +48,7 @@ public class App {
         long end = System.currentTimeMillis();
 
         if (parsedArgs.benchmark()) {
-            logger.info("Benchmark: " + (end - start) + "ms");
-            return;
+            logger.info("Execution time: " + (end - start) + "ms");
         }
         
         logger.info("Solution: " + solution);
